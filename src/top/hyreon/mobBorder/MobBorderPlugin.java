@@ -346,7 +346,7 @@ public class MobBorderPlugin extends JavaPlugin {
 	public double getCloneChance(int mLevel, int pLevel) {
 		if (!usingPlayerLevel) pLevel = 0;
 		int relativeLevel = mLevel - pLevel;
-		if (relativeLevel < 0) return 1;
+		if (relativeLevel < 0) return 0;
 		double localCloneChance = (1 + cloneChance*relativeLevel);
 		if (localCloneChance > cloneChanceMax) return cloneChanceMax;
 		return localCloneChance;
