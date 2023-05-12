@@ -1,0 +1,228 @@
+#Config for MobBorders
+
+#NOTE: This MUST be off for servers older than 1.11, or players won't see live mob updates!
+#Indicates whether to use subtitles for danger notifications.
+#'true' uses subtitles, 'false' uses chat.
+use-subtitles: true
+
+#-----------------
+#BASIC SETTINGS
+#-----------------
+
+#Indicates the relative damage output of mobs per level. Set this to 0 to disable.
+damage-buff: 0.25
+
+#Indicates the relative effective health of mobs per level. Set this to 0 to disable.
+#This only affects damage they take from players.
+health-buff: 0.25
+
+#Indicates the relative experience dropped by mobs per level. Negative values work too.
+#This may encourage people to go far from spawn for quick experience drops!
+experience-yield: 0.25
+
+#Indicates the maximum experience boost from monsters tougher than you.
+#If the value above is negative, this becomes the minimum experience boost.
+#Setting this to 0 or any negative number will remove caps entirely.
+experience-cap: 2 #mobs never drop more than twice the experience
+
+#By default, the experience level of the player allows them to fight up to par with stronger mobs.
+#If you don't like this, you can turn it off.
+#It is highly recommended you change the world settings, since they are balanced around players being level 30!
+use-player-level: true
+
+#-----------------
+#WORLD SETTINGS
+#-----------------
+
+world-settings:
+
+  #'blocks-per-level' indicates how many blocks one must travel before mobs level up.
+  #The default keeps the game tight and lag-free, but isn't recommended for servers with 50 or more active members.
+  #As a guideline, take your intended maximum distance from spawn, divide it by 40, and add the safe area.
+  #Set this to zero to disable mob borders altogether for the world.
+
+  #'center-level' is the level these mobs have at the world's spawn.
+
+  #'safe-area' determines the number of blocks you must travel before mobs begin to level up.
+
+  world: #must match the world you intend to change, even if your server doesn't have a multi-world plugin.
+    blocks-per-point: 0 #setting this to a value > 0 will increase the mob level by XP points in addition to XP levels.
+    blocks-per-level: 160
+    center-level: 0
+    safe-area: 500 #first 500 blocks are always level 0
+  world_nether:
+    blocks-per-level: 20 #8 times as fast, as it is in vanilla for travel purposes
+    center-level: 10 #minor barrier to entry
+    safe-area: 262.5 #corresponds exactly to the overworld, but is always at least 10
+  world_the_end:
+    blocks-per-level: 160
+    center-level: 25 #modest barrier to entry
+    safe-area: 500 #first 500 blocks are always level 25
+  #you can add more worlds, but the configuration must match exactly.
+
+#-----------------
+#ADVANCED SETTINGS
+#-----------------
+
+#The player has lots of ways to deal indirect damage. Since it's not leveled, they will always deal full damage.
+#If you wish to make mobs resist these effects at higher levels, ignoring the players' relative experience, have at it.
+#Leaving this blank will keep things working as intended.
+resisted-damage:
+  - ENTITY_ATTACK
+  - ENTITY_SWEEP_ATTACK
+  - ENTITY_EXPLOSION
+  - PROJECTILE  #makes dispensers slightly worse
+  - THORNS
+  - BLOCK_EXPLOSION  #does not include TNT; essentially only beds and respawn anchors, which is exclusively triggered by the player
+  - LAVA  #easy, powerful indirect damage source
+  - CONTACT  #stalagmites are quite powerful
+  - LIGHTNING  #can be summoned by trident
+  - POISON
+  - MAGIC
+  - FIRE
+  - CUSTOM  #most plugin damage; probably a player ability, so probably resist it
+# - FALLING_BLOCK  #very tricky to pull off, doesn't deal with crowds very well
+# - FLY_INTO_WALL  #should not affect mobs, but if it does, let's leave it be
+# - STARVATION  #should not affect mobs, but if it does, let's leave it be
+# - SUICIDE  #resisting this is a bad idea
+# - FALL  #purely environmental, and we wouldn't want to slow down mob farms
+# - DROWNING  #purely environmental, and we wouldn't want to slow down mob farms
+# - HOT_FLOOR  #purely environmental, and we wouldn't want to slow down mob farms
+# - SUFFOCATION  #purely environmental
+# - FIRE_TICK  #includes daylight burning
+# - MELTING  #we wouldn't want snowmen to be viable, would we?
+# - DRAGON_BREATH  #usually mob
+# - WITHER  #usually mobs, sometimes custom splash potions; we'll give it to them if they get this
+# - VOID  #bad idea, but entirely possible
+
+#Mobs under this list cannot have their speed or follow range increased,
+#nor can they spawn double.
+#includes farmable mobs, bosses, and ones that can help the player.
+#they will still recieve bonus damage and health.
+excluded-mobs:
+  - ALLAY
+  - AXOLOTL
+  - BAT
+  - BEE
+  - CAT
+  - CHICKEN
+  - COD
+  - COW
+  - DOLPHIN
+  - DONKEY
+  - FOX
+  - FROG
+  - GLOW_SQUID
+  - GOAT
+  - HORSE
+  - IRON_GOLEM
+  - LLAMA
+  - MULE
+  - MUSHROOM_COW
+  - OCELOT
+  - PANDA
+  - PARROT
+  - PIG
+  - RABBIT
+  - SALMON
+  - SHEEP
+  - SNOWMAN
+  - SQUID
+  - STRIDER
+  - TADPOLE
+  - TRADER_LLAMA
+  - TROPICAL_FISH
+  - TURTLE
+  - WANDERING_TRADER
+  - WOLF
+  - ZOMBIE_HORSE
+  - SKELETON_HORSE
+  - SHULKER
+  - PUFFERFISH
+  - HOGLIN  #grey area
+  - WARDEN
+  - WITHER
+  - ENDER_DRAGON
+  - ELDER_GUARDIAN
+
+#If players really push their luck, they might start seeing double.
+#This is the chance of a mob spawning a clone of itself per level.
+#Ghosts do not drop items, and will despawn when far away (even if the normally wouldn't.)
+clone-chance: 0.002
+
+#Indicates the maximum chance of a clone spawning.
+clone-chance-cap: 0.5
+
+#After a clone is spawned, more may be spawned, until this number is hit.
+clone-count-cap: 4 #quadruplets.
+
+#Attributes will affect all players, regardless of experience level.
+#However, they will be chosen in an 'intelligent' way, based on the strength of all nearby players.
+#These are off by default.
+allow-attribute-changes: false
+
+#Indicates the relative sightlines of mobs per level. Set this to 0 to disable.
+#This is a 'mob attribute' - there's no way to make this change per player.
+keen-buff: 0.10
+
+#Indicates the speed of mobs per level. Set this to 0 to disable.
+#This is a 'mob attribute' - there's no way to make this change per player.
+speed-buff: 0.01
+
+#Indicates the maximum speed increase of mobs.
+#At 2.5, they can move up to 2.5x faster.
+speed-cap: 1.75
+
+#Indicates how many seconds to wait before updating the player with the new regional mob buff.
+#Smaller amounts are more accurate and fair, but larger amounts are less spammy and laggy.
+#Setting this to zero disables automatic updates entirely. This is not recommended.
+update-wait-time: 40
+
+#Indicates how many seconds to wait before telling the user whether they have crossed into dangerous territory.
+warning-wait-time: 1
+
+#Whether any of this affects PvP. This doesn't include experience yields.
+#If so, players' levels are capped at the regional mob level.
+#Examples:
+#  Bob (lv 20) v Alice (lv 15) in lv 20+ territory: Bob has 225% buff, with 5 levels ahead of her.
+#  Lv 18 territory: Bob has 175% buff against Alice. Bob is capped at lv 18, so only 3 levels ahead of Alice.
+#  Lv 15- territory: Bob has no buff. Both players are forced to an equal and lower level.
+#This may encourage people to go far from spawn for protection!
+affects-pvp: false
+
+#-----------------
+#LAST RESORT SETTINGS
+#-----------------
+
+#How many seconds to wait between updating the players' last resort penalties.
+#Note that passive damage will always be taken once every second, or slower.
+#Smaller amounts are more accurate and fair, but larger amounts are less spammy and laggy.
+last-resort-wait-time: 5
+
+#Nether and end travel can be quite peaceful.
+#If you want to change that, you can force all mobs to be aggressive at a certain level difference.
+#Set to -1 to disable.
+forced-aggression-level: 20
+
+#At what relative level should players be warned about forced aggression?
+forced-aggression-warning: 15
+
+#At extremely high distances, mobs might not be enough on their own.
+#This indicates the level difference required for passive damage to apply.
+passive-damage-level: 40
+
+#How many hearts per level per second should be lost?
+#The default of 0.125 means that, for every level past 40, the player will lose half a heart every 4 seconds.
+#Set to -1 to disable.
+passive-damage-rate: 0.125
+
+#At what relative level should players be warned about passive damage?
+passive-damage-warning: 35
+
+#Some players are cracked. If you do not wish to institute a vanilla world border as a last resort,
+#but still want to handle cracked players, then you will want to kill them instantly with this.
+#Set to -1 to disable.
+forced-smite-level: -1
+
+#At what relative level should players be warned about instant kill?
+smite-warning: -1

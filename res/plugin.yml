@@ -1,0 +1,11 @@
+name: MobBorder
+description: Uses mobs to protect the server's memory.
+main: top.hyreon.mobBorder.MobBorderPlugin
+version: 1.2
+api-version: 1.13
+commands:
+  mobbuff:
+    description: Get the mob buff of your current area.
+    usage: "/mobbuff OR /mobbuff ?"
+    aliases: "/buff"
+softdepend: [Multiverse-Core, mcMMO]
