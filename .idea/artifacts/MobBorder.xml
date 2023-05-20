@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="MobBorder">
-    <output-path>$PROJECT_DIR$/../../../Minecraft_Spigot_Server/plugins</output-path>
+    <output-path>$PROJECT_DIR$/out</output-path>
     <root id="archive" name="MobBorder.jar">
       <element id="module-output" name="MobBorderPlugin" />
     </root>

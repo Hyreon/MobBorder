@@ -49,12 +49,16 @@ public class MobBorderPlugin extends JavaPlugin {
 	private int forcedAggressionWarning;
 	private int passiveDamageWarning;
 	private int smiteWarning;
+	public LanguageLoader lloader;
+	private boolean smoothDistance;
 
 	@Override
 	public void onEnable() {
 		
 		createConfig();
 		FileConfiguration config = getConfig();
+
+		lloader = new LanguageLoader(this);
 		
 		getWorldSettings(config);
 		
@@ -65,6 +69,7 @@ public class MobBorderPlugin extends JavaPlugin {
 		experienceYield = config.getDouble("experience-yield");
 		cloneChance = config.getDouble("clone-chance");
 		maxClones = config.getInt("clone-count-cap");
+		smoothDistance = config.getBoolean("smooth-distance");
 		pvpMode = config.getBoolean("affects-pvp");
 		usingPlayerLevel = config.getBoolean("use-player-level");
 		usingAttributes = config.getBoolean("allow-attribute-changes");
@@ -240,13 +245,23 @@ public class MobBorderPlugin extends JavaPlugin {
 		double safeDistance = Math.max(0, safeAreas.getOrDefault(world, 500.0));
 		
 		Location center = world.getSpawnLocation();
-		double distance = location.distance(center) - safeDistance;
+		double distance;
+		if (smoothDistance) {
+			distance = location.distance(center) - safeDistance;
+		} else {
+			distance = roughDistance(location, center) - safeDistance;
+		}
 
 		if (baseRate == 0) return minLevel;
 		
 		int level = levelOf(distance, orbRate) + (int) (distance / baseRate) + minLevel;
 		if (level < 0) return 0;
 		else return level;
+	}
+
+	private double roughDistance(Location location, Location center) {
+		location = location.clone().subtract(center);
+		return Math.max(Math.abs(location.getBlockX()), Math.abs(location.getBlockZ()));
 	}
 
 	/**
@@ -297,15 +312,15 @@ public class MobBorderPlugin extends JavaPlugin {
 		int speedBuff = (int) Math.round(100*getSpeedBuff(mLevel, pLevel));
 		//int keenBuff = (int) Math.round(100*getKeenBuff(mLevel, pLevel));	 //not important enough
 		if (damageBuff == 100 && healthBuff == 100 && experienceYield == 100)
-			return "SAFE";
-		else if (damageBuff == healthBuff && healthBuff == experienceYield && experienceYield == speedBuff)
-			return "BUFF: "+damageBuff+"%";
+			return lloader.get("show_safe", false);
+		else if (damageBuff == healthBuff && healthBuff == experienceYield && (experienceYield == speedBuff || speedBuff == 100))
+			return String.format(lloader.get("show_buff", false), damageBuff);
 		else if (damageBuff == healthBuff && (healthBuff == speedBuff || speedBuff == 100))
-			return "STAT/EXP: "+damageBuff+"/"+experienceYield;
+			return String.format(lloader.get("show_xp_split", false), damageBuff, experienceYield);
 		else if (damageBuff == healthBuff)
-			return "STR/EXP/SPD: "+damageBuff+"/"+experienceYield+"/"+speedBuff;
+			return String.format(lloader.get("show_speed_split", false), damageBuff, experienceYield, speedBuff);
 		else
-			return "DMG/HP/EXP/SPD: "+damageBuff+"/"+healthBuff+"/"+experienceYield+"/"+speedBuff;
+			return String.format(lloader.get("show_all", false), damageBuff, healthBuff, experienceYield, speedBuff);
 	}
 
 	public double getDamageBuff(int mLevel, int pLevel) {
@@ -418,9 +433,9 @@ public class MobBorderPlugin extends JavaPlugin {
 	public String getMajorWarning(int relativeLevel, int previousLevel) {
 		if (relativeLevel < 0) relativeLevel = 0;
 
-		if (relativeLevel >= forcedAggressionWarning && previousLevel < forcedAggressionWarning) return ChatColor.RED + "Forced aggression soon!";
-		if (relativeLevel >= passiveDamageWarning && previousLevel < passiveDamageWarning) return ChatColor.RED + "Passive damage soon!";
-		if (relativeLevel >= smiteWarning && previousLevel < smiteWarning) return ChatColor.RED + "" + ChatColor.BOLD + "Instant death soon!";
+		if (relativeLevel >= forcedAggressionWarning && previousLevel < forcedAggressionWarning) return lloader.get("warning_aggressive");
+		if (relativeLevel >= passiveDamageWarning && previousLevel < passiveDamageWarning) return lloader.get("warning_damage");
+		if (relativeLevel >= smiteWarning && previousLevel < smiteWarning) return lloader.get("warning_smite");
 		else return "";
 	}
 

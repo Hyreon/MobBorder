@@ -25,13 +25,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="018ccc22-fbd2-48e4-8f8c-8749239e2999" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/res/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/res/en_US.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/res/plugin.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/src/top/hyreon/depoDefrag/Depo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/src/top/hyreon/depoDefrag/DepoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/src/top/hyreon/depoDefrag/DepoDefragPlugin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DepoDefrag/src/top/hyreon/depoDefrag/LanguageLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/lang/default.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/top/hyreon/mobBorder/LanguageLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/MobBorder.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/MobBorder.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobBorderPlugin/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobBorderPlugin/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobBorderPlugin/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobBorderPlugin/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/res/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/res/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/top/hyreon/mobBorder/CommandGetMobBuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/top/hyreon/mobBorder/CommandGetMobBuff.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/top/hyreon/mobBorder/MobBorderPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/top/hyreon/mobBorder/MobBorderPlugin.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +49,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -63,12 +66,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Minecraft_Spigot_Server/plugins" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/out" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.37350506" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="top.hyreon.mobBorder" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Minecraft\Minecraft-Spigit-Creator\Firebalance\MobBorderPlugin\res" />
     </key>
@@ -97,17 +103,23 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2487" y="181" key="FileChooserDialogImpl" timestamp="1682284037334">
-      <screen x="1920" y="0" width="1680" height="1010" />
+    <state x="648" y="186" key="FileChooserDialogImpl" timestamp="1684556953108">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="648" y="186" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1684556953108" />
     <state x="2487" y="181" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1682284037334" />
-    <state x="2112" y="0" key="SettingsEditor" timestamp="1682292947999">
-      <screen x="1920" y="0" width="1680" height="1010" />
+    <state x="219" y="0" key="SettingsEditor" timestamp="1684556959421">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="219" y="0" key="SettingsEditor/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1684556959421" />
     <state x="2112" y="0" key="SettingsEditor/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1682292947999" />
     <state x="2347" y="13" key="new project wizard" timestamp="1682284038397">
       <screen x="1920" y="0" width="1680" height="1010" />
     </state>
     <state x="2347" y="13" key="new project wizard/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1682284038397" />
+    <state x="532" y="237" key="run.anything.popup" timestamp="1684558422349">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="532" y="237" key="run.anything.popup/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1684558422349" />
   </component>
 </project>

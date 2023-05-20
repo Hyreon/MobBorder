@@ -7,5 +7,5 @@ commands:
   mobbuff:
     description: Get the mob buff of your current area.
     usage: "/mobbuff OR /mobbuff ?"
-    aliases: "/buff"
+    aliases: "buff"
 softdepend: [Multiverse-Core, mcMMO]

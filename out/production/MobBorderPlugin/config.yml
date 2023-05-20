@@ -64,6 +64,10 @@ world-settings:
 #ADVANCED SETTINGS
 #-----------------
 
+#Using smooth distance is much more resource intensive than the default method, but does distance on a sphere rather than a square.
+#Not recommended!
+smooth-distance: false
+
 #The player has lots of ways to deal indirect damage. Since it's not leveled, they will always deal full damage.
 #If you wish to make mobs resist these effects at higher levels, ignoring the players' relative experience, have at it.
 #Leaving this blank will keep things working as intended.
@@ -98,7 +102,7 @@ resisted-damage:
 #Mobs under this list cannot have their speed or follow range increased,
 #nor can they spawn double.
 #includes farmable mobs, bosses, and ones that can help the player.
-#they will still recieve bonus damage and health.
+#they will still receive bonus damage and health.
 excluded-mobs:
   - ALLAY
   - AXOLOTL

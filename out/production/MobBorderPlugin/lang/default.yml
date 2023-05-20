@@ -1,0 +1,22 @@
+
+
+help_buff: "The farther you venture out, the stronger mobs will become."
+#there is no help_nerf, no stat should go lower than defaults
+help_player_buff: "Your vanilla experience level, however, makes you stronger."
+help_player_same: "There's no way to counter it. Cope."
+help_pvp: "It even works against other players!"
+help_no_pvp: "This does not affect PvP in any way."
+help_xp: "The experience that mobs drop is unaffected."
+help_xp_buff: "Mobs stronger than you will drop bonus experience."
+help_xp_nerf: "If you go too far, mobs will drop less experience as a penalty."
+
+#for these, color is automatically handled: yellow if better, red if worse
+show_safe: "SAFE"
+show_buff: "BUFF: %d%%"
+show_xp_split: "STAT/EXP: %d/%d"
+show_speed_split: "STR/EXP/SPD: %d/%d/%d"
+show_all: "DMG/HP/EXP/SPD: %d/%d/%d/%d"
+
+warning_aggressive: "&cForced aggression soon!"
+warning_damage: "&cPassive damage soon!"
+warning_smite: "&c&lInstant death soon!"
