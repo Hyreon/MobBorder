@@ -1,4 +1,5 @@
 #Config for MobBorders
+locale: "default"
 
 #NOTE: This MUST be off for servers older than 1.11, or players won't see live mob updates!
 #Indicates whether to use subtitles for danger notifications.
@@ -64,8 +65,7 @@ world-settings:
 #ADVANCED SETTINGS
 #-----------------
 
-#Using smooth distance is much more resource intensive than the default method, but does distance on a sphere rather than a square.
-#Not recommended!
+#Using smooth distance is more resource intensive than the default method, but does distance on a sphere rather than a square.
 smooth-distance: false
 
 #The player has lots of ways to deal indirect damage. Since it's not leveled, they will always deal full damage.

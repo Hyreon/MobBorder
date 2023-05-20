@@ -1,7 +1,7 @@
 name: MobBorder
 description: Uses mobs to protect the server's memory.
 main: top.hyreon.mobBorder.MobBorderPlugin
-version: 1.2
+version: 1.3
 api-version: 1.13
 commands:
   mobbuff:

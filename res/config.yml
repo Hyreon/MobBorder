@@ -1,4 +1,5 @@
 #Config for MobBorders
+locale: "default"
 
 #NOTE: This MUST be off for servers older than 1.11, or players won't see live mob updates!
 #Indicates whether to use subtitles for danger notifications.
