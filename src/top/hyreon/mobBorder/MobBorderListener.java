@@ -2,6 +2,7 @@ package top.hyreon.mobBorder;
 
 import java.util.*;
 
+import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -10,10 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,6 +24,7 @@ public class MobBorderListener implements Listener {
 	
 	static MobBorderPlugin plugin;
 	private static int clonesOfThisType = 1;
+	private static Random cloneRandom = new Random();
 
 	MobBorderListener(MobBorderPlugin plugin) {
 		MobBorderListener.plugin = plugin;
@@ -47,6 +46,22 @@ public class MobBorderListener implements Listener {
 			mLevel = Math.min(getPlayer(attacker).getLevel(),mLevel);
 		}
 		e.setDamage(e.getDamage() * plugin.getDamageBuff(mLevel,pLevel));
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public static void playerHealEvent(EntityRegainHealthEvent e) {
+		if (e.getRegainReason() != EntityRegainHealthEvent.RegainReason.SATIATED) return;
+		if (!(e.getEntity() instanceof Player)) return;
+		Player player = ((Player) e.getEntity());
+		int pLevel = player.getLevel();
+		int mLevel = plugin.getLevelByLocation(player.getLocation());
+		int effectiveLevel = mLevel;
+		if (plugin.isLastResortUsingPlayerLevel()) effectiveLevel -= pLevel;
+		if (!plugin.doRegen(effectiveLevel)) {
+			e.setCancelled(true);
+			if (player.getGameMode() == GameMode.SURVIVAL )
+				player.setSaturation(player.getSaturation() + 1.5f); //manually update hunger
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -112,10 +127,9 @@ public class MobBorderListener implements Listener {
 		}
 
 		if (plugin.getCloneChance(mLevel, pLevel) > 0) {
-			Random random = new Random();
 			if (clonesOfThisType >= plugin.getMaxClones()) {
 				resetCloneCounter();    //can't clone, so the next spawn isn't a clone
-			} else if (random.nextDouble() < plugin.getCloneChance(mLevel, pLevel)) {
+			} else if (cloneRandom.nextDouble() < plugin.getCloneChance(mLevel, pLevel)) {
 				clonesOfThisType++;
 				e.getEntity().getWorld().spawnEntity(e.getLocation(), e.getEntityType());
 			} else {
@@ -198,6 +212,13 @@ public class MobBorderListener implements Listener {
 		LivingEntity killedEntity = e.getEntity();
 		Player killer = killedEntity.getKiller();
 
+		if (ghosts.contains(e.getEntity())) {
+			e.getDrops().clear(); //no loot from ghosts
+			e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
+			e.getEntity().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, e.getEntity().getLocation().add(0, 0.2, 0), 20, 0.1, 0.0, 0.1, 0.1);
+			e.getEntity().remove();
+		}
+
 		if (killer == null) return; //must have been killed by a player
 		if (killedEntity.getType() == EntityType.PLAYER) return;
 		
@@ -205,23 +226,17 @@ public class MobBorderListener implements Listener {
 		int pLevel = killer.getLevel();
 		e.setDroppedExp((int) (e.getDroppedExp() * plugin.getYield(mLevel, pLevel)));
 
-		if (ghosts.contains(e.getEntity())) e.getDrops().clear(); //no loot from ghosts
-
 	}
 	
 	@EventHandler
 	public static void onPlayerJoin(PlayerJoinEvent e) {
 		
 		if (plugin.getUpdateWaitTime() <= 0 || plugin.getWarningWaitTime() <= 0) return; //boss said just skip it l0l
-		
-		int dangerLevel = plugin.getLevelByLocation(e.getPlayer().getLocation());
-		if (plugin.usingPlayerLevel()) dangerLevel -= e.getPlayer().getLevel();
-		
-		startDangerDetector(e.getPlayer(), dangerLevel);
-		
-		if (dangerLevel >= 0) startUpdates(e.getPlayer(), dangerLevel);
 
-		startLastResortMeasures(e.getPlayer(), dangerLevel);
+		int dangerLevel = plugin.getLevelByLocation(e.getPlayer().getLocation());
+
+		startDangerDetector(e.getPlayer(), dangerLevel);
+		startLastResortMeasures(e.getPlayer());
 		
 	}
 
@@ -232,7 +247,9 @@ public class MobBorderListener implements Listener {
             @Override
             public void run() {
             	
-            	if (!player.isOnline()) return;
+            	if (!player.isOnline()) {
+            		return;
+				}
             	
                 int currentLevel = plugin.getLevelByLocation(player.getLocation());
                 if (plugin.usingPlayerLevel()) currentLevel -= player.getLevel();
@@ -249,7 +266,7 @@ public class MobBorderListener implements Listener {
                 
             }
             
-        }.runTaskLater(plugin, (long) (plugin.getWarningWaitTime() * 20));
+        }.runTaskLater(plugin, (long) (plugin.getWarningWaitTime() * 20L));
 		
 	}
 
@@ -280,7 +297,7 @@ public class MobBorderListener implements Listener {
         
 	}
 
-	private static void startLastResortMeasures(Player p, int lastLevel) {
+	private static void startLastResortMeasures(Player p) {
 
 		BukkitTask task = new BukkitRunnable() {
 
@@ -290,7 +307,8 @@ public class MobBorderListener implements Listener {
 				if (!p.isOnline()) return;
 
 				int currentLevel = plugin.getLevelByLocation(p.getLocation());
-				if (plugin.usingPlayerLevel()) currentLevel -= p.getLevel();
+				if (plugin.isLastResortUsingPlayerLevel()) currentLevel -= p.getLevel();
+				if (currentLevel > plugin.maxRelativeLevel) currentLevel = plugin.maxRelativeLevel;
 
 				if (plugin.allHostile(currentLevel)) {
 					Collection<Entity> entities = p.getWorld().getNearbyEntities(p.getLocation(), 20, 20, 20);
@@ -306,11 +324,16 @@ public class MobBorderListener implements Listener {
 					p.damage(damage);
 				}
 
+				double hunger = plugin.passiveHunger(currentLevel) * plugin.getLastResortWaitTime();
+				if (hunger > 0) {
+					p.setExhaustion((float) (p.getExhaustion() + 4.0f * hunger));
+				}
+
 				if (plugin.doSmite(currentLevel)) {
 					p.setHealth(0);
 				}
 
-				startLastResortMeasures(p, currentLevel);
+				startLastResortMeasures(p);
 
 			}
 

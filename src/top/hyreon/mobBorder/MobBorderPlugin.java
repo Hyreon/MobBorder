@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -42,15 +41,22 @@ public class MobBorderPlugin extends JavaPlugin {
 	private double warningWaitTime;
 	private double lastResortWaitTime;
 	private boolean usingPlayerLevel;
+	private boolean lastResortUsingPlayerLevel;
 	private int forcedAggressionLevel;
 	private int passiveDamageLevel;
 	private double passiveDamageRate;
+	private int passiveHungerLevel;
+	private double passiveHungerRate;
+	private int passiveHungerWarning;
 	private int smiteLevel;
 	private int forcedAggressionWarning;
 	private int passiveDamageWarning;
 	private int smiteWarning;
 	public LanguageLoader lloader;
 	private boolean smoothDistance;
+	protected int maxRelativeLevel;
+	private int noRegenLevel;
+	private int noRegenWarning;
 
 	@Override
 	public void onEnable() {
@@ -61,7 +67,8 @@ public class MobBorderPlugin extends JavaPlugin {
 		lloader = new LanguageLoader(this);
 		
 		getWorldSettings(config);
-		
+
+		maxRelativeLevel = config.getInt("max-relative-level");
 		damageBuff = config.getDouble("damage-buff");
 		healthBuff = config.getDouble("health-buff");
 		speedBuff = config.getDouble("speed-buff");
@@ -79,15 +86,26 @@ public class MobBorderPlugin extends JavaPlugin {
 		passiveDamageWarning = config.getInt("passive-damage-warning");
 		smiteWarning = config.getInt("forced-smite-warning");
 
+		lastResortUsingPlayerLevel = config.getBoolean("last-resort-use-player-level");
 		lastResortWaitTime = config.getDouble("last-resort-wait-time");
 		forcedAggressionLevel = config.getInt("forced-aggression-level");
 		passiveDamageLevel = config.getInt("passive-damage-level");
 		passiveDamageRate = config.getDouble("passive-damage-rate");
+		passiveHungerLevel = config.getInt("passive-hunger-level");
+		passiveHungerRate = config.getDouble("passive-hunger-rate");
+		passiveHungerWarning = config.getInt("passive-hunger-warning");
 		smiteLevel = config.getInt("forced-smite-level");
+		noRegenLevel = config.getInt("no-regen-level");
+		noRegenWarning = config.getInt("no-regen-warning");
+
+		if (maxRelativeLevel < 0) {
+			maxRelativeLevel = Integer.MAX_VALUE;
+		}
 
 		if (cloneChance > 0) {
 			cloneChanceMax = config.getDouble("clone-chance-cap");
 			if (cloneChanceMax <= 0) cloneChanceMax = 1;
+			if (maxClones < 0) maxClones = Integer.MAX_VALUE;
 		}
 		
 		if (experienceYield > 0) {
@@ -324,34 +342,38 @@ public class MobBorderPlugin extends JavaPlugin {
 	}
 
 	public double getDamageBuff(int mLevel, int pLevel) {
-		if (!usingPlayerLevel) pLevel = 0;
-		int relativeLevel = mLevel - pLevel;
-		if (relativeLevel < 0) return 1;
-		return (1 + damageBuff*relativeLevel);
+		int effectiveLevel = mLevel;
+		if (usingPlayerLevel) effectiveLevel -= pLevel;
+		if (effectiveLevel < 0) return 1;
+		if (effectiveLevel > maxRelativeLevel) effectiveLevel = maxRelativeLevel;
+		return (1 + damageBuff*effectiveLevel);
 	}
 
 	public double getHealthBuff(int mLevel, int pLevel) {
-		if (!usingPlayerLevel) pLevel = 0;
-		int relativeLevel = mLevel - pLevel;
-		if (relativeLevel < 0) return 1;
-		return (1 + healthBuff*relativeLevel);
+		int effectiveLevel = mLevel;
+		if (usingPlayerLevel) effectiveLevel -= pLevel;
+		if (effectiveLevel < 0) return 1;
+		if (effectiveLevel > maxRelativeLevel) effectiveLevel = maxRelativeLevel;
+		return (1 + healthBuff*effectiveLevel);
 	}
 
 	public double getKeenBuff(int mLevel, int pLevel) {
-		if (!usingPlayerLevel) pLevel = 0;
 		if (!usingAttributes) return 1;
-		int relativeLevel = mLevel - pLevel;
-		if (relativeLevel < 0) return 1;
-		return (1 + keenBuff*relativeLevel);
+		int effectiveLevel = mLevel;
+		if (usingPlayerLevel) effectiveLevel -= pLevel;
+		if (effectiveLevel < 0) return 1;
+		if (effectiveLevel > maxRelativeLevel) effectiveLevel = maxRelativeLevel;
+		return (1 + keenBuff*effectiveLevel);
 	}
 
 	public double getSpeedBuff(int mLevel, int pLevel) {
-		if (!usingPlayerLevel) pLevel = 0;
 		if (!usingAttributes) return 1;
-		int relativeLevel = mLevel - pLevel;
-		if (relativeLevel < 0) return 1;
+		int effectiveLevel = mLevel;
+		if (usingPlayerLevel) effectiveLevel -= pLevel;
+		if (effectiveLevel < 0) return 1;
+		if (effectiveLevel > maxRelativeLevel) effectiveLevel = maxRelativeLevel;
 
-		double localSpeedBuff = 1 + speedBuff*relativeLevel;
+		double localSpeedBuff = 1 + speedBuff*effectiveLevel;
 
 		if (localSpeedBuff < speedMin) return speedMin;
 		else if (localSpeedBuff > speedMax) return speedMax;
@@ -359,12 +381,12 @@ public class MobBorderPlugin extends JavaPlugin {
 	}
 
 	public double getCloneChance(int mLevel, int pLevel) {
-		if (!usingPlayerLevel) pLevel = 0;
-		int relativeLevel = mLevel - pLevel;
-		if (relativeLevel < 0) return 0;
-		double localCloneChance = (1 + cloneChance*relativeLevel);
-		if (localCloneChance > cloneChanceMax) return cloneChanceMax;
-		return localCloneChance;
+		int effectiveLevel = mLevel;
+		if (usingPlayerLevel) effectiveLevel -= pLevel;
+		if (effectiveLevel < 0) return 0;
+		if (effectiveLevel > maxRelativeLevel) effectiveLevel = maxRelativeLevel;
+		double localCloneChance = (cloneChance*effectiveLevel);
+		return Math.min(localCloneChance, cloneChanceMax);
 	}
 
 	public boolean allHostile(int currentLevel) {
@@ -378,9 +400,20 @@ public class MobBorderPlugin extends JavaPlugin {
 		return (currentLevel - passiveDamageLevel) * passiveDamageRate;
 	}
 
+	public double passiveHunger(int currentLevel) {
+		if (passiveHungerLevel < 0) return 0;
+		if (currentLevel <= passiveHungerLevel) return 0;
+		return (currentLevel - passiveHungerLevel) * passiveHungerRate;
+	}
+
 	public boolean doSmite(int currentLevel) {
 		if (smiteLevel < 0) return false;
 		return currentLevel >= smiteLevel;
+	}
+
+	public boolean doRegen(int currentLevel) {
+		if (noRegenLevel < 0) return true;
+		return currentLevel < noRegenLevel;
 	}
 
 	public int getMaxClones() {
@@ -430,12 +463,18 @@ public class MobBorderPlugin extends JavaPlugin {
 		return usingPlayerLevel;
 	}
 
-	public String getMajorWarning(int relativeLevel, int previousLevel) {
-		if (relativeLevel < 0) relativeLevel = 0;
+	public boolean isLastResortUsingPlayerLevel() {
+		return lastResortUsingPlayerLevel;
+	}
 
-		if (relativeLevel >= forcedAggressionWarning && previousLevel < forcedAggressionWarning) return lloader.get("warning_aggressive");
-		if (relativeLevel >= passiveDamageWarning && previousLevel < passiveDamageWarning) return lloader.get("warning_damage");
-		if (relativeLevel >= smiteWarning && previousLevel < smiteWarning) return lloader.get("warning_smite");
+	public String getMajorWarning(int effectiveLevel, int previousEffectiveLevel) {
+		if (effectiveLevel < 0) effectiveLevel = 0;
+
+		if (effectiveLevel >= smiteWarning && previousEffectiveLevel < smiteWarning) return lloader.get("warning_smite");
+		if (effectiveLevel >= forcedAggressionWarning && previousEffectiveLevel < forcedAggressionWarning) return lloader.get("warning_aggressive");
+		if (effectiveLevel >= passiveDamageWarning && previousEffectiveLevel < passiveDamageWarning) return lloader.get("warning_damage");
+		if (effectiveLevel >= noRegenWarning && previousEffectiveLevel < noRegenWarning) return lloader.get("warning_no_regen");
+		if (effectiveLevel >= passiveHungerWarning && previousEffectiveLevel < passiveHungerWarning) return lloader.get("warning_hunger");
 		else return "";
 	}
 

@@ -25,10 +25,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="018ccc22-fbd2-48e4-8f8c-8749239e2999" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/MobBorderPlugin/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobBorderPlugin/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MobBorderPlugin/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobBorderPlugin/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MobBorderPlugin/lang/default.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MobBorderPlugin/lang/default.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/res/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/res/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/lang/default.yml" beforeDir="false" afterPath="$PROJECT_DIR$/res/lang/default.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/res/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/top/hyreon/mobBorder/MobBorderListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/top/hyreon/mobBorder/MobBorderListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/top/hyreon/mobBorder/MobBorderPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/top/hyreon/mobBorder/MobBorderPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/top/hyreon/mobBorder/Printer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/top/hyreon/mobBorder/Printer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

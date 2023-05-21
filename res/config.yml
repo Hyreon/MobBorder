@@ -28,7 +28,7 @@ experience-cap: 2 #mobs never drop more than twice the experience
 
 #By default, the experience level of the player allows them to fight up to par with stronger mobs.
 #If you don't like this, you can turn it off.
-#It is highly recommended you change the world settings, since they are balanced around players being level 30!
+#If you do, it is highly recommended you change the world settings, since they are balanced around players being level 30!
 use-player-level: true
 
 #-----------------
@@ -64,6 +64,12 @@ world-settings:
 #-----------------
 #ADVANCED SETTINGS
 #-----------------
+
+#Should mobs have a maximum strength?
+#This will avoid absurd stats a million blocks out. It affects everything else.
+#This is not the absolute level - you'll always run into trouble if you go far enough.
+#Set to -1 to disable.
+max-relative-level: -1
 
 #Using smooth distance is more resource intensive than the default method, but does distance on a sphere rather than a square.
 smooth-distance: false
@@ -155,9 +161,13 @@ excluded-mobs:
 clone-chance: 0.002
 
 #Indicates the maximum chance of a clone spawning.
+#1.0 means that it can go up to 100% clone rate.
+#It is not recommended to go higher than 50% chance per clone attempt.
 clone-chance-cap: 0.5
 
 #After a clone is spawned, more may be spawned, until this number is hit.
+#Setting to -1 is not recommended, as it may cause an infinite loop!!
+#At least use 5,000 or something similarly high, then your server has a chance of surviving.
 clone-count-cap: 4 #quadruplets.
 
 #Attributes will affect all players, regardless of experience level.
@@ -198,6 +208,12 @@ affects-pvp: false
 #LAST RESORT SETTINGS
 #-----------------
 
+#Should last resort settings use vanilla experience levels, or treat all players as if they are level 0?
+#This is 'true' by default because that's the theme of the plugin.
+#However, since these features are to stop cracked players, it might make more sense to set to false.
+#You can set this to true even if use-player-level is false.
+last-resort-use-player-level: true
+
 #How many seconds to wait between updating the players' last resort penalties.
 #Note that passive damage will always be taken once every second, or slower.
 #Smaller amounts are more accurate and fair, but larger amounts are less spammy and laggy.
@@ -222,6 +238,27 @@ passive-damage-rate: 0.125
 
 #At what relative level should players be warned about passive damage?
 passive-damage-warning: 35
+
+#If losing health is too much, you can always use hunger instead.
+#This indicates the level difference required for passive starvation to apply.
+passive-hunger-level: -1
+
+#How many shanks per level per second should be lost?
+#The default of 0.125 means that, for every level past 30, the player will lose half a shank every 4 seconds.
+#Set to -1 to disable.
+passive-hunger-rate: 0.125
+
+#At what relative level should players be warned about starvation?
+passive-hunger-warning: -1
+
+#Despite all this, a good food supply can still overcome these systems.
+#At a certain point, you may want to disable food regeneration entirely.
+#Other sources of healing will still work.
+#Set to -1 to disable.
+no-regen-level: -1
+
+#At what relative level should players be warned about no regeneration?
+no-regen-warning: -1
 
 #Some players are cracked. If you do not wish to institute a vanilla world border as a last resort,
 #but still want to handle cracked players, then you will want to kill them instantly with this.

@@ -17,6 +17,8 @@ show_xp_split: "STAT/EXP: %d/%d"
 show_speed_split: "STR/EXP/SPD: %d/%d/%d"
 show_all: "DMG/HP/EXP/SPD: %d/%d/%d/%d"
 
+warning_hunger: "&cPassive hunger soon."
+warning_no_regen: "&cNo regen soon."
 warning_aggressive: "&cForced aggression soon!"
 warning_damage: "&cPassive damage soon!"
 warning_smite: "&c&lInstant death soon!"

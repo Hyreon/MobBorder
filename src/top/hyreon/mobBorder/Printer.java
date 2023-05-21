@@ -13,31 +13,39 @@ public abstract class Printer {
 
 	public int sendUpdate(Player p, int lastLevel) {
 
-		int pLevel = p.getLevel();
 		int mLevel = plugin.getLevelByLocation(p.getLocation());
-		int relativeLevel = mLevel;
-		if (plugin.usingPlayerLevel()) relativeLevel -= pLevel;
+		if (mLevel == lastLevel) return mLevel;
 
-		if (relativeLevel <= 0) return 0;
-		if (relativeLevel == lastLevel) return relativeLevel;
+		int pLevel = p.getLevel();
+		int buffEffectiveLevel = mLevel;
+		if (plugin.usingPlayerLevel()) buffEffectiveLevel -= pLevel;
+		int lastResortEffectiveLevel = mLevel;
+		if (plugin.isLastResortUsingPlayerLevel()) lastResortEffectiveLevel -= pLevel;
+		int lastResortEffectiveLastLevel = lastLevel;
+		if (plugin.isLastResortUsingPlayerLevel()) lastResortEffectiveLastLevel -= pLevel;
+
+		if (buffEffectiveLevel <= 0) return 0;
+		if (lastResortEffectiveLevel <= 0) lastResortEffectiveLevel = 0;
+		if (lastResortEffectiveLastLevel <= 0) lastResortEffectiveLastLevel = 0;
 
 		String displayBuff = plugin.getDisplayBuff(mLevel, pLevel);
 
 		String majorWarning;
 
 		ChatColor color;
-		if (relativeLevel < lastLevel) {
+		if (mLevel < lastLevel) {
 			color = ChatColor.YELLOW;
 			majorWarning = "";
 		} else {
 			color = ChatColor.RED;
-			majorWarning = plugin.getMajorWarning(relativeLevel, lastLevel);
+			System.out.println(lastResortEffectiveLevel + " : " + lastResortEffectiveLastLevel);
+			majorWarning = plugin.getMajorWarning(lastResortEffectiveLevel, lastResortEffectiveLastLevel);
 		}
 
 
 		sendDisplayBuff(p, majorWarning, color + displayBuff);
 
-		return relativeLevel;
+		return mLevel;
 
 	}
 
