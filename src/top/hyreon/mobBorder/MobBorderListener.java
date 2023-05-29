@@ -235,11 +235,13 @@ public class MobBorderListener implements Listener {
 
 		int dangerLevel = plugin.getLevelByLocation(e.getPlayer().getLocation());
 
-		startDangerDetector(e.getPlayer(), dangerLevel);
+		startDangerDetector(e.getPlayer(), 0);
 		startLastResortMeasures(e.getPlayer());
 		
 	}
 
+	//Says whether the player has entered danger or not.
+	//Does not send the player any specifics.
 	private static void startDangerDetector(Player player, int lastLevel) {
 		
 		new BukkitRunnable() {	
@@ -273,7 +275,8 @@ public class MobBorderListener implements Listener {
 	public static void stopUpdates(Player player) {
 		plugin.getServer().getScheduler().cancelTask(updaterIndex.get(player));
 	}
-	
+
+	//Says how much danger the player is in right now.
 	public static void startUpdates(Player p, int lastLevel) {
 		
 		BukkitTask task = new BukkitRunnable() {
